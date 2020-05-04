@@ -1,4 +1,5 @@
 import datetime
+from typing import List
 
 
 class BaseRecord:
@@ -32,7 +33,7 @@ class Part(BaseRecord):
         quantity(int): show how much of that part is in the bin
         bin_id(int): show the id of a single Bin object
     """
-    def __init__(self, id: int, name: str, quantity: int, bin_id: int):
+    def __init__(self, name: str, quantity: int, bin_id: int, id: int):
         "Initializes description of the part"
         super().__init__(id)
         self.name = name
@@ -69,25 +70,36 @@ class Log(BaseRecord):
         self.quantity = quantity
 
 
-class InventoryManager(BaseRecord):
+class InventoryManager:
     """ Represents an inventory
     parts(List): Shows a list of all parts
     bins(List): Shows a list of all bins
     logs(List): Shows a list of all the logs
     users(List): Shows a list of all users
     """
-    def __init__(self, id: int):
+    def __init__(self):
         "Initializes description of the inventory data"
-        super().__init__(id)
-        self.parts = []
-        self.bins = []
-        self.logs = []
-        self.users = []
+        self.parts: List[Part] = []
+        self.bins: List[Bin] = []
+        self.logs: List[Log] = []
+        self.users: List[User] = []
 
     def create_user(self, email: str, student_num: int) -> User:
+        user = User(email, student_num, 0)
+        self.users.append(user)
+        return user
+
+    def find_user_by_student_num(self, student_num: int) -> User:
+        for user in self.users:
+            if user.student_num == student_num:
+                return user
 
     def find_bin_by_location(self, location: str) -> Bin:
+        for bin in self.bins:
+            if bin.location == location:
+                return bin
 
-    def find_user_by_student_num(self, num: int) -> User:
-
-    def add_part(self, name: str, quantity: int, bin_location: str) -> Part:
+    def add_part(self, name: str, quantity: int, bin_id: int) -> Part:
+        part = Part(name, quantity, bin_id, 1)
+        self.parts.append(part)
+        return part
