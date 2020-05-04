@@ -93,13 +93,20 @@ class InventoryManager:
         for user in self.users:
             if user.student_num == student_num:
                 return user
+        return None
 
     def find_bin_by_location(self, location: str) -> Bin:
         for bin in self.bins:
             if bin.location == location:
                 return bin
+        return None
 
-    def add_part(self, name: str, quantity: int, bin_id: int) -> Part:
-        part = Part(name, quantity, bin_id, 1)
-        self.parts.append(part)
-        return part
+    def add_part(self, name: str, quantity: int, bin_location: str):
+        bin = self.find_bin_by_location(bin_location)
+
+        new_part = Part(name, quantity, 2, 1)
+        new_part.bin_id = bin.id
+        self.parts.append(new_part)
+        bin.part_id = new_part.id
+
+        return new_part
